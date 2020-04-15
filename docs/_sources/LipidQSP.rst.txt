@@ -1,0 +1,7 @@
+LipidQSP module
+===============
+
+.. automodule:: LipidQSP
+   :members:
+   :undoc-members:
+   :show-inheritance:
