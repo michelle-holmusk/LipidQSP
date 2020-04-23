@@ -1,8 +1,11 @@
-from logs import logDecorator as lD
-import jsonref, psycopg2
+import json, psycopg2
 from psycopg2.extras import execute_values
+import sys
+sys.path.insert(0, '/Users/michelleng/LipidQSP/src')
 
-config = jsonref.load(open('../config/config.json'))
+from logs import logDecorator as lD
+
+config = json.load(open('../config/config.json'))
 logBase = config['logging']['logBase'] + '.databaseIO.pgIO'
 
 @lD.log(logBase + '.getAllData')
@@ -39,7 +42,7 @@ def getAllData(logger, query, values=None, dbName=None):
     vals = None
     
     try:
-        db = jsonref.load(open('../config/db.json'))
+        db = json.load(open('../config/db.json'))
 
         # Check whether a dbName is available
         if (dbName is None) and ('defaultDB' in db):
@@ -115,7 +118,7 @@ def getDataIterator(logger, query, values=None, chunks=100, dbName=None):
     '''
 
     try:
-        db = jsonref.load(open('../config/db.json'))
+        db = json.load(open('../config/db.json'))
 
         # Check whether a dbName is available
         if (dbName is None) and ('defaultDB' in db):
@@ -189,7 +192,7 @@ def getSingleDataIterator(logger, query, values=None, dbName=None):
     '''
 
     try:
-        db = jsonref.load(open('../config/db.json'))
+        db = json.load(open('../config/db.json'))
 
         # Check whether a dbName is available
         if (dbName is None) and ('defaultDB' in db):
@@ -240,9 +243,9 @@ def commitData(logger, query, values=None, dbName=None):
     '''query data from the database
     
     Query the data over here. If there is a problem with
-    the data, it is going to return the value of ``None``, and
+    the data, it is going to return the value of None, and
     log the error. Your program needs to check whether 
-    there was an error with the query by checking for a ``None``
+    there was an error with the query by checking for a None
     return value
     
     Parameters
@@ -261,16 +264,16 @@ def commitData(logger, query, values=None, dbName=None):
     
     Returns
     -------
-    True or None
-        On successful completion, a ``True`` is returned. In case
-        there is an error, the error will be logged, and a ``None`` will
-        be returnd
+    list or None
+        A list of tuples containing the values is returned. In case
+        there is an error, the error will be logged, and a None will
+        be return
     '''
 
-    vals = True
+    vals = None
     
     try:
-        db = jsonref.load(open('../config/db.json'))
+        db = json.load(open('../config/db.json'))
 
         # Check whether a dbName is available
         if (dbName is None) and ('defaultDB' in db):
@@ -286,7 +289,7 @@ def commitData(logger, query, values=None, dbName=None):
     except Exception as e:
         logger.error('Unable to connect to the database')
         logger.error(str(e))
-        return None
+        return
 
     try:
 
@@ -298,7 +301,6 @@ def commitData(logger, query, values=None, dbName=None):
     except Exception as e:
         logger.error('Unable to obtain data from the database for:\n query: {}\nvalues'.format(query, values))
         logger.error(str(e))
-        vals = None
 
 
     try:
@@ -319,7 +321,7 @@ def commitDataList(logger, query, values, dbName=None):
     Query the data over here. If there is a problem with
     the data, it is going to return the value of None, and
     log the error. Your program needs to check whether 
-    there was an error with the query by checking for a ``None``
+    there was an error with the query by checking for a None
     return value
     
     Parameters
@@ -338,16 +340,16 @@ def commitDataList(logger, query, values, dbName=None):
     
     Returns
     -------
-    True or None
-        A successful completion of this function returns a ``True``. 
-        In case there is an error, the error will be logged, and a ``None`` will
-        be returned
+    list or None
+        A list of tuples containing the values is returned. In case
+        there is an error, the error will be logged, and a None will
+        be return
     '''
 
-    val = True
-
+    vals = None
+    
     try:
-        db = jsonref.load(open('../config/db.json'))
+        db = json.load(open('../config/db.json'))
 
         # Check whether a dbName is available
         if (dbName is None) and ('defaultDB' in db):
@@ -363,15 +365,16 @@ def commitDataList(logger, query, values, dbName=None):
     except Exception as e:
         logger.error('Unable to connect to the database')
         logger.error(str(e))
-        return None
+        return
 
     try:
         query = cur.mogrify(query)
         execute_values(cur, query, values)
+
     except Exception as e:
-        logger.error('Unable to execute query for:\n query: {}\nvalues'.format(query, values))
+        logger.error('Unable to obtain data from the database for:\n query: {}\nvalues'.format(query, values))
         logger.error(str(e))
-        val = None
+
 
     try:
         conn.commit()
@@ -380,6 +383,6 @@ def commitDataList(logger, query, values, dbName=None):
     except Exception as e:
         logger.error('Unable to disconnect to the database')
         logger.error(str(e))
-        return None
+        return 
 
-    return val
+    return vals

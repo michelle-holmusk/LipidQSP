@@ -1,0 +1,24 @@
+{
+    "rawMedsTable"      : "testGround.meds_data",
+    "rawpatientTable"   : "patient_details_nomap",
+    "rawCholTable"      : "results_chol",
+    "rawLDLTable"       : "results_ldl",
+    "rawMedspkl"        : "../data/raw_data/medsTable.pkl",
+    "rawpatientpkl"     : "../data/raw_data/patientTable.pkl",
+    "rawCholpkl"        : "../data/raw_data/cholTable.pkl",
+    "rawLDLpkl"         : "../data/raw_data/ldlTable.pkl",
+    "baselineTable"     : "../data/raw_data/baselineTable2020.pkl",
+    "medicationsTable"  : "../data/intermediate/followupPrescriptions_Statin_withAdherence2020.pkl",
+    "biomarkersTable"   : "../data/intermediate/followupBiomarker_Lipid_finalVer2020.pkl",
+    "dataAvailTbl"      : "../data/intermediate/data_availability.pkl",
+    "biomarkersList"    : {"lipid" : ["LDL", "Cholesterol", "HDL", "Triglycerides"]},
+    "medicationsList"   : {"statin" : ["atorvastatin", "fluvastatin", "lovastatin", "pravastatin", "rosuvastatin", "simvastatin"]},
+    "savePath"			: {
+    	"intermediate" 	: "../data/intermediate",
+        "final"         : "../data/final",
+        "raw"           : "../data/raw_data",
+        "origMeds"      : "origMeds",
+        "optimizedMeds" : "optimizedMeds"
+    },
+    "outputPath"        : "../results/newtest"
+}
